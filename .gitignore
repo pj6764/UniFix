@@ -1,0 +1,24 @@
+# Compiled class files
+*.class
+bin/
+out/
+target/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+.settings/
+.project
+.classpath
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and scratch
+*.log
+scratch/

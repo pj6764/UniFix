@@ -1,0 +1,29 @@
+UniFix/
+│
+├── lib/
+│   └── mysql-connector-j-8.x.x.jar     # Place the downloaded MySQL JDBC driver .jar here
+│
+├── sql/
+│   └── schema.sql                      # SQL script to create database and tables
+│
+├── src/
+│   ├── Main.java                       # Entry point to launch the application
+│   │
+│   ├── config/
+│   │   └── DatabaseConnection.java     # Manages JDBC connection (URL, user, password)
+│   │
+│   ├── models/
+│   │   ├── User.java                   # Holds user data (userId, name, email, role)
+│   │   └── Issue.java                  # Holds issue data (issueId, title, category, upvotes, etc.)
+│   │
+│   ├── dao/
+│   │   ├── UserDAO.java                # Database operations for users (login, register)
+│   │   └── IssueDAO.java               # Database operations for issues (create, fetch, upvote, update status)
+│   │
+│   └── ui/
+│       ├── LoginFrame.java             # Login & Registration window
+│       ├── StudentDashboard.java       # Feed view, upvote action, report issue form
+│       └── AdminDashboard.java         # Authority view: sort by upvotes, change issue status
+│
+├── .gitignore                          # Excludes compiled .class files and local IDE cache
+└── README.md                           # Documentation, setup steps, and project overview
