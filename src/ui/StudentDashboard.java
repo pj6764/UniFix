@@ -160,25 +160,41 @@ public class StudentDashboard extends JFrame {
     }
 
     private void loadIssues() {
-        tableModel.setRowCount(0);
-        // Student view: show sorted by urgency (highest upvotes first)
-        currentIssueList = issueDAO.getAllIssues(true);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        statusFeedbackLabel.setText("Loading issues in background worker thread...");
+        SwingWorker<List<Issue>, Void> worker = new SwingWorker<>() {
+            @Override
+            protected List<Issue> doInBackground() {
+                // Fetch issues on background thread without blocking Swing EDT
+                return issueDAO.getAllIssues(true);
+            }
 
-        for (Issue issue : currentIssueList) {
-            String dateStr = issue.getCreatedAt() != null ? dateFormat.format(issue.getCreatedAt()) : "N/A";
-            tableModel.addRow(new Object[]{
-                issue.getIssueId(),
-                issue.getTitle(),
-                issue.getCategory(),
-                issue.getLocation(),
-                issue.getStatus(),
-                issue.getUpvotes(),
-                issue.getCreatorName(),
-                dateStr
-            });
-        }
-        statusFeedbackLabel.setText("Loaded " + currentIssueList.size() + " issue(s). Showing highest upvoted first.");
+            @Override
+            protected void done() {
+                try {
+                    currentIssueList = get();
+                    tableModel.setRowCount(0);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+                    for (Issue issue : currentIssueList) {
+                        String dateStr = issue.getCreatedAt() != null ? dateFormat.format(issue.getCreatedAt()) : "N/A";
+                        tableModel.addRow(new Object[]{
+                            issue.getIssueId(),
+                            issue.getTitle(),
+                            issue.getCategory(),
+                            issue.getLocation(),
+                            issue.getStatus(),
+                            issue.getUpvotes(),
+                            issue.getCreatorName(),
+                            dateStr
+                        });
+                    }
+                    statusFeedbackLabel.setText("Loaded " + currentIssueList.size() + " issue(s). Showing highest upvoted first.");
+                } catch (Exception e) {
+                    statusFeedbackLabel.setText("Error loading issues: " + e.getMessage());
+                }
+            }
+        };
+        worker.execute();
     }
 
     private Issue getSelectedIssue() {

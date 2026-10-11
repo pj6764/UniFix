@@ -227,29 +227,45 @@ public class AdminDashboard extends JFrame {
     }
 
     private void loadIssues() {
-        tableModel.setRowCount(0);
         String category = (String) categoryFilterCombo.getSelectedItem();
         String status = (String) statusFilterCombo.getSelectedItem();
+        statusFeedbackLabel.setText("Loading issues in background worker thread...");
 
-        // Always sort by upvotes DESC in admin view for crowd prioritization
-        currentIssueList = issueDAO.getFilteredIssues(category, status, true);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SwingWorker<List<Issue>, Void> worker = new SwingWorker<>() {
+            @Override
+            protected List<Issue> doInBackground() {
+                // Background worker thread: database query without freezing UI
+                return issueDAO.getFilteredIssues(category, status, true);
+            }
 
-        for (Issue issue : currentIssueList) {
-            String dateStr = issue.getCreatedAt() != null ? dateFormat.format(issue.getCreatedAt()) : "N/A";
-            tableModel.addRow(new Object[]{
-                issue.getIssueId(),
-                "★ " + issue.getUpvotes() + " upvotes",
-                issue.getTitle(),
-                issue.getCategory(),
-                issue.getLocation(),
-                issue.getStatus(),
-                issue.getCreatorName(),
-                dateStr
-            });
-        }
-        statusFeedbackLabel.setText("Loaded " + currentIssueList.size() + " issue(s). Highest upvoted items prioritized on top.");
-        updateSelectedIssueControls();
+            @Override
+            protected void done() {
+                try {
+                    currentIssueList = get();
+                    tableModel.setRowCount(0);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+                    for (Issue issue : currentIssueList) {
+                        String dateStr = issue.getCreatedAt() != null ? dateFormat.format(issue.getCreatedAt()) : "N/A";
+                        tableModel.addRow(new Object[]{
+                            issue.getIssueId(),
+                            "★ " + issue.getUpvotes() + " upvotes",
+                            issue.getTitle(),
+                            issue.getCategory(),
+                            issue.getLocation(),
+                            issue.getStatus(),
+                            issue.getCreatorName(),
+                            dateStr
+                        });
+                    }
+                    statusFeedbackLabel.setText("Loaded " + currentIssueList.size() + " issue(s). Highest upvoted items prioritized on top.");
+                    updateSelectedIssueControls();
+                } catch (Exception e) {
+                    statusFeedbackLabel.setText("Error loading issues: " + e.getMessage());
+                }
+            }
+        };
+        worker.execute();
     }
 
     private Issue getSelectedIssue() {

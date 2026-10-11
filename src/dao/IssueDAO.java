@@ -15,7 +15,7 @@ import java.util.List;
  * Data Access Object for Issue entities.
  * Handles issue reporting, retrieval, status updates, and transactional upvoting.
  */
-public class IssueDAO {
+public class IssueDAO implements IssueDAOInterface {
 
     /**
      * Creates a new campus issue and automatically registers the creator's initial upvote in a transaction.
@@ -23,6 +23,7 @@ public class IssueDAO {
      * @param issue Issue object to insert
      * @return true if successfully created, false otherwise.
      */
+    @Override
     public boolean createIssue(Issue issue) {
         String insertIssueSql = "INSERT INTO issues (title, category, location, description, status, upvotes, created_by) " +
                                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -98,6 +99,7 @@ public class IssueDAO {
      * @param userId Current user ID
      * @return true if user already voted, false otherwise.
      */
+    @Override
     public boolean hasUserUpvoted(int issueId, int userId) {
         String sql = "SELECT 1 FROM issue_upvotes WHERE issue_id = ? AND user_id = ?";
         Connection conn = DatabaseConnection.getConnection();
@@ -125,6 +127,7 @@ public class IssueDAO {
      * @param userId Current user ID
      * @return true if upvoted successfully, false if already upvoted or on failure.
      */
+    @Override
     public boolean upvoteIssue(int issueId, int userId) {
         if (hasUserUpvoted(issueId, userId)) {
             return false; // Prevent duplicate upvote
@@ -180,6 +183,7 @@ public class IssueDAO {
      * @param newStatus New status value
      * @return true if updated, false otherwise.
      */
+    @Override
     public boolean updateIssueStatus(int issueId, String newStatus) {
         String sql = "UPDATE issues SET status = ? WHERE issue_id = ?";
         Connection conn = DatabaseConnection.getConnection();
@@ -203,6 +207,7 @@ public class IssueDAO {
      * @param sortByUpvotes If true, sort by upvotes DESC; otherwise sort by created_at DESC.
      * @return List of Issue models
      */
+    @Override
     public List<Issue> getAllIssues(boolean sortByUpvotes) {
         return getFilteredIssues(null, null, sortByUpvotes);
     }
@@ -215,6 +220,7 @@ public class IssueDAO {
      * @param sortByUpvotes If true, sort by upvotes DESC; otherwise sort by created_at DESC.
      * @return List of matching Issue models
      */
+    @Override
     public List<Issue> getFilteredIssues(String categoryFilter, String statusFilter, boolean sortByUpvotes) {
         List<Issue> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
@@ -274,5 +280,29 @@ public class IssueDAO {
             System.err.println("[IssueDAO ERROR] Failed to fetch issues: " + e.getMessage());
         }
         return list;
+    }
+
+    /**
+     * Deletes an issue by its primary ID.
+     * Related rows in issue_upvotes are automatically deleted by ON DELETE CASCADE.
+     *
+     * @param issueId Target issue ID
+     * @return true if deleted successfully, false otherwise
+     */
+    @Override
+    public boolean deleteIssue(int issueId) {
+        String sql = "DELETE FROM issues WHERE issue_id = ?";
+        Connection conn = DatabaseConnection.getConnection();
+        if (conn == null) {
+            return false;
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, issueId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("[IssueDAO ERROR] Failed to delete issue: " + e.getMessage());
+            return false;
+        }
     }
 }

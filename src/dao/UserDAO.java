@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * Data Access Object for User entities.
  * Handles authentication, registration, and user lookups via JDBC PreparedStatements.
  */
-public class UserDAO {
+public class UserDAO implements UserDAOInterface {
 
     /**
      * Authenticates a user given email and password.
@@ -21,6 +21,7 @@ public class UserDAO {
      * @param password Plaintext password
      * @return User object if credentials are valid, or null otherwise.
      */
+    @Override
     public User authenticate(String email, String password) {
         String sql = "SELECT user_id, name, email, role FROM users WHERE email = ? AND password = ?";
         Connection conn = DatabaseConnection.getConnection();
@@ -55,6 +56,7 @@ public class UserDAO {
      * @param email Email to verify
      * @return true if email exists, false otherwise.
      */
+    @Override
     public boolean isEmailTaken(String email) {
         String sql = "SELECT 1 FROM users WHERE email = ?";
         Connection conn = DatabaseConnection.getConnection();
@@ -80,6 +82,7 @@ public class UserDAO {
      * @param plainPassword Password string
      * @return true if successfully inserted, false otherwise.
      */
+    @Override
     public boolean registerUser(User user, String plainPassword) {
         String sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
         Connection conn = DatabaseConnection.getConnection();
