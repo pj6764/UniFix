@@ -121,13 +121,8 @@ public class LoginFrame extends JFrame {
         gbc.gridwidth = 2;
         gbc.insets = new Insets(20, 8, 8, 8);
 
-        JButton loginBtn = new JButton("Sign In");
+        JButton loginBtn = UIUtils.createPrimaryButton("Sign In", new Dimension(120, 38));
         loginBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        loginBtn.setBackground(new Color(24, 119, 242));
-        loginBtn.setForeground(Color.WHITE);
-        loginBtn.setFocusPainted(false);
-        loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        loginBtn.setPreferredSize(new Dimension(120, 38));
         loginBtn.addActionListener(this::handleLogin);
         panel.add(loginBtn, gbc);
 
@@ -214,13 +209,8 @@ public class LoginFrame extends JFrame {
         gbc.gridwidth = 2;
         gbc.insets = new Insets(15, 6, 6, 6);
 
-        JButton registerBtn = new JButton("Create Account");
+        JButton registerBtn = UIUtils.createSuccessButton("Create Account", new Dimension(140, 36));
         registerBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        registerBtn.setBackground(new Color(34, 139, 34));
-        registerBtn.setForeground(Color.WHITE);
-        registerBtn.setFocusPainted(false);
-        registerBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        registerBtn.setPreferredSize(new Dimension(140, 36));
         registerBtn.addActionListener(this::handleRegister);
         panel.add(registerBtn, gbc);
 

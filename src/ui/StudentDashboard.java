@@ -65,12 +65,7 @@ public class StudentDashboard extends JFrame {
         userPanel.add(titleLabel);
         userPanel.add(welcomeLabel);
 
-        JButton logoutBtn = new JButton("Logout");
-        logoutBtn.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        logoutBtn.setBackground(new Color(220, 53, 69));
-        logoutBtn.setForeground(Color.WHITE);
-        logoutBtn.setFocusPainted(false);
-        logoutBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton logoutBtn = UIUtils.createDangerButton("Logout", new Dimension(85, 32));
         logoutBtn.addActionListener(this::handleLogout);
 
         topBar.add(userPanel, BorderLayout.WEST);
@@ -135,32 +130,16 @@ public class StudentDashboard extends JFrame {
         JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         actionsPanel.setOpaque(false);
 
-        JButton upvoteBtn = new JButton("▲ Upvote Selected Issue");
-        upvoteBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        upvoteBtn.setBackground(new Color(25, 135, 84));
-        upvoteBtn.setForeground(Color.WHITE);
-        upvoteBtn.setFocusPainted(false);
-        upvoteBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton upvoteBtn = UIUtils.createSuccessButton("▲ Upvote Selected Issue", null);
         upvoteBtn.addActionListener(this::handleUpvote);
 
-        JButton reportBtn = new JButton("+ Report New Issue");
-        reportBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        reportBtn.setBackground(new Color(13, 110, 253));
-        reportBtn.setForeground(Color.WHITE);
-        reportBtn.setFocusPainted(false);
-        reportBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton reportBtn = UIUtils.createPrimaryButton("+ Report New Issue", null);
         reportBtn.addActionListener(e -> openReportIssueDialog());
 
-        JButton viewDetailsBtn = new JButton("View Details");
-        viewDetailsBtn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        viewDetailsBtn.setFocusPainted(false);
-        viewDetailsBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton viewDetailsBtn = UIUtils.createSecondaryButton("View Details", null);
         viewDetailsBtn.addActionListener(e -> showSelectedIssueDetails());
 
-        JButton refreshBtn = new JButton("Refresh");
-        refreshBtn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        refreshBtn.setFocusPainted(false);
-        refreshBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton refreshBtn = UIUtils.createSecondaryButton("Refresh", null);
         refreshBtn.addActionListener(e -> loadIssues());
 
         actionsPanel.add(upvoteBtn);
@@ -263,7 +242,7 @@ public class StudentDashboard extends JFrame {
         JScrollPane descScroll = new JScrollPane(descArea);
         descScroll.setBorder(BorderFactory.createTitledBorder("Full Description"));
 
-        JButton closeBtn = new JButton("Close");
+        JButton closeBtn = UIUtils.createSecondaryButton("Close", new Dimension(90, 32));
         closeBtn.addActionListener(e -> detailsDialog.dispose());
 
         panel.add(metaPanel, BorderLayout.NORTH);
@@ -335,13 +314,10 @@ public class StudentDashboard extends JFrame {
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         btnPanel.setOpaque(false);
 
-        JButton cancelBtn = new JButton("Cancel");
+        JButton cancelBtn = UIUtils.createSecondaryButton("Cancel", new Dimension(90, 32));
         cancelBtn.addActionListener(e -> reportDialog.dispose());
 
-        JButton submitBtn = new JButton("Submit Issue");
-        submitBtn.setBackground(new Color(13, 110, 253));
-        submitBtn.setForeground(Color.WHITE);
-        submitBtn.setFocusPainted(false);
+        JButton submitBtn = UIUtils.createPrimaryButton("Submit Issue", new Dimension(120, 32));
         submitBtn.addActionListener(e -> {
             String title = titleField.getText().trim();
             String category = (String) categoryCombo.getSelectedItem();

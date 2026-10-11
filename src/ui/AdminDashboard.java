@@ -71,12 +71,7 @@ public class AdminDashboard extends JFrame {
         titlePanel.add(titleLabel);
         titlePanel.add(welcomeLabel);
 
-        JButton logoutBtn = new JButton("Logout");
-        logoutBtn.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        logoutBtn.setBackground(new Color(220, 53, 69));
-        logoutBtn.setForeground(Color.WHITE);
-        logoutBtn.setFocusPainted(false);
-        logoutBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton logoutBtn = UIUtils.createDangerButton("Logout", new Dimension(85, 32));
         logoutBtn.addActionListener(this::handleLogout);
 
         topBar.add(titlePanel, BorderLayout.WEST);
@@ -103,16 +98,14 @@ public class AdminDashboard extends JFrame {
         statusFilterCombo = new JComboBox<>(statuses);
         statusFilterCombo.addActionListener(e -> loadIssues());
 
-        JButton resetFiltersBtn = new JButton("Reset Filters");
-        resetFiltersBtn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        JButton resetFiltersBtn = UIUtils.createSecondaryButton("Reset Filters", null);
         resetFiltersBtn.addActionListener(e -> {
             categoryFilterCombo.setSelectedIndex(0);
             statusFilterCombo.setSelectedIndex(0);
             loadIssues();
         });
 
-        JButton refreshBtn = new JButton("Refresh");
-        refreshBtn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        JButton refreshBtn = UIUtils.createSecondaryButton("Refresh", null);
         refreshBtn.addActionListener(e -> loadIssues());
 
         filterPanel.add(filterCategoryLabel);
@@ -201,18 +194,10 @@ public class AdminDashboard extends JFrame {
         updateStatusCombo = new JComboBox<>(new String[]{"PENDING", "IN_PROGRESS", "RESOLVED"});
         updateStatusCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 
-        JButton updateStatusBtn = new JButton("Save Status Change");
-        updateStatusBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        updateStatusBtn.setBackground(new Color(13, 110, 253));
-        updateStatusBtn.setForeground(Color.WHITE);
-        updateStatusBtn.setFocusPainted(false);
-        updateStatusBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton updateStatusBtn = UIUtils.createPrimaryButton("Save Status Change", null);
         updateStatusBtn.addActionListener(this::handleStatusUpdate);
 
-        JButton viewDetailsBtn = new JButton("View Full Details");
-        viewDetailsBtn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        viewDetailsBtn.setFocusPainted(false);
-        viewDetailsBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton viewDetailsBtn = UIUtils.createSecondaryButton("View Full Details", null);
         viewDetailsBtn.addActionListener(e -> viewSelectedIssueDetails());
 
         actionControls.add(updateLabel);
@@ -349,7 +334,7 @@ public class AdminDashboard extends JFrame {
         JScrollPane descScroll = new JScrollPane(descArea);
         descScroll.setBorder(BorderFactory.createTitledBorder("Full Problem Description"));
 
-        JButton closeBtn = new JButton("Close");
+        JButton closeBtn = UIUtils.createSecondaryButton("Close", new Dimension(90, 32));
         closeBtn.addActionListener(e -> detailsDialog.dispose());
 
         panel.add(metaPanel, BorderLayout.NORTH);
